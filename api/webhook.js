@@ -127,15 +127,18 @@ module.exports = async (req, res) => {
 
 
     // --- Обработка текстового сообщения (/start) ---
-    } else if (update.message) {
-        const chatId = update.message.chat.id;
-        const userId = update.message.from.id;
-        
-        if (update.message.text && update.message.text.startsWith('/start')) {
-            await checkAndSendPromo(chatId, userId);
-        }
-    }
+} else if (update.message) {
+    const chatId = update.message.chat.id;
+    const userId = update.message.from.id;
+    const text = update.message.text; // <-- ДОБАВЛЕНА ЭТА СТРОКА
+    
+    // ЭТА СТРОКА ДЛЯ ОТЛАДКИ: проверяем, может ли бот ответить
+    await sendMessage(chatId, "Получил ваш запрос. Теперь проверяю подписку...");
 
+    if (text && text.startsWith('/start')) {
+        await checkAndSendPromo(chatId, userId);
+    }
+}
     // Всегда отправляем ответ Vercel, что запрос обработан успешно
     res.status(200).send('OK');
 };
